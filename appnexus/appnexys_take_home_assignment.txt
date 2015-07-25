@@ -1,0 +1,67 @@
+The Financial and Business Analytics team analyzes AppNexus ad placement data and provides reports showing trends and forecasts for use by the management team.  We primarily use Python for this work.  Data comes to us in tabular form, reporting ad transactions -- advertiser, publisher, # of impressions, cost, etc.  
+
+The goal of this task is to write a Python script that can read a CSV (character-separated-values) file containing this data, and compute the average cost of impressions sold, grouped by a particular field or fields, thus showing the average cost / impression for a advertiser/publisher pair, for a campaign, or for other field combinations.  We call this kind of calculation an aggregation.  
+
+
+More specifically:
+
+1. The script, average_cpm.py, should accept three command-line arguments;  '--data_file' (the path to the input data); '--delimiter' (the character that separates fields in a record of data); and '--group_by' (the field or fields to aggregate by).  The script can be run as follows:  
+
+python average_cpm.py --data_file=input_file.csv --group_by=advertiser,publisher --delimiter=,
+
+
+2. The script can assume that after the header line, each line in the file represents a row of data describing a group of ad impressions sold.  Each field in the row contains reporting data for that sale, for example:
+
+header row (first line in the file):
+buyer_member_id,advertiser_id,campaign_id,imps,cost,revenue,clicks
+
+data row (each subsequent line):
+49,13378,39552,12,0.0066,0.012,0
+
+
+The script should be flexible enough to handle a file with a different field delimeter (in the above example, this is the comma - but could be a colon, vertical bar, or any other character).  It should also be able to handle any set of columns -- with the understanding that the file will always have an imps field and a cost field, so this average calculation can always be made.  
+
+
+3. The script should output a csv file containing the average cost of ad impressions for each value in the group_by column (specified on the command line), sorted from highest to lowest.  The cost should be expressed as CPM (cost per mille, or cost per thousand impressions) which is calculated as (total cost / total impressions * 1000).  Additionally, the group_by column should be able to accomodate a list of columns so the user can see CPM values for combinations of fields.  For example, a user might want to see CPM by the (buyer_member_id,advertiser_id) combination.  Output would look something like this:
+
+[these fields are:  buyer_member_id, advertiser_id, average CPM / impression
+
+716,13368,9537.57225434
+651,11194,1211.208
+324,1856,209.935483871
+405,9097,99.99
+845,11484,99.0
+289,2399,94.737
+833,9890,68.8393082461
+
+
+4. You are free to write the code any way you wish, as long as you don't use any data processing libraries like NumPy or pandas to do the work.  All the calculations must be done with standard python structures such as lists, dictionaries, sets, etc.  
+
+
+5. As a hint/suggestion, try to structure your code around functional units.  This makes code easier to debug, read, and reuse.  Consider the implementing the following function definitions:
+def loadFile(file_name):
+   """
+   Loads in the file at location file_name.
+   """
+ 
+def group_CPM(data,group_by):
+   """
+   data - Data set that is used to calculate the CPM
+   group_by - Which fields to group by. If we want to calculate CPM by advertiser, group_by=["advertiser"]
+   """
+
+
+6. Feel free to organize and optimize your code as you see fit, to maximize clarity and readability.  
+
+
+7. Bonus Points! How might you handle data errors? For example, what if the attribute name row does not contain a cost field? Can you modify your script to handle this gracefully?  
+
+To make your code even more flexible, replace the group_CPM function with a function that is general enough to compute any metric that is passed into it.  For example, if you were to extend this code for a future release, you might want to calculate any number of additional metrics such as:  
+
+   click-through-rate_ (CTR) - total clicks / total impressions 
+   revenue-per-mille (RPM) - total revenue / total impressions * 1000 
+   
+Naturally, you can only compute a metric if the appropriate data appears in the data file passed in.
+
+
+8. Important extra credit!  If you are familiar with the NumPy or pandas libraries, please use one of these to solve the problem in addition to your "Python-only" solution.  This is extra credit, not required.  Since pandas and NumPy will play an important role with your work here, familiarity with these packages is a plus.  
