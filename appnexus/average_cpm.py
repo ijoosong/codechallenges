@@ -1,35 +1,29 @@
-
 #!/usr/local/bin/python
-import sys, getopt, csv
-
-# Get data files, delimiter, and groupbys
-data_file = ''
-delim = ''
-group_by = ''
-
-# Read command line args
-myopts, args = getopt.getopt(sys.argv[1:],"i:o:")
-
-###############################
-# o == option
-# a == argument passed to the o
-###############################
-for o, a in myopts:
-    if o == '--data_file':
-        data_file = a
-    elif o == '--delimiter':
-        delimiter = a
-    elif o == '--group_by':
-        group_by = a
-    else:
-        print("Usage: %s --data_file=input_file.csv --group_by=advertiser,publisher --delimiter=," % sys.argv[0])
+import argparse, csv
 
 def aggregate():
-    reader = loadFile()
+    """
+    Main function that calls other functions to output aggregate
+    """
+    (data_file, group_by, delim) = parseCommandLine()
+    reader = loadFile(data_file, delim)
     categories, values = getCategoriesValues(reader)
+    print categories
+    print values[0]
 
+def parseCommandLine():
+    """
+    Parses the command line arguments
+    """
+    parser = argparse.ArgumentParser(description='Description of your program')
+    parser.add_argument('--data_file', help='Description for what file to open', required=True)
+    parser.add_argument('--group_by', help='Description for what fields to group by', required=True)
+    parser.add_argument('--delimiter', help='Description for what delimiter separates the fields', required=True)
 
-def loadFile():
+    args = vars(parser.parse_args())
+    return (args['data_file'], args['group_by'], args['delimiter'])
+
+def loadFile(data_file, delim):
     """
     Loads file in data_file
     """
