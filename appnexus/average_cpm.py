@@ -8,8 +8,12 @@ def aggregate():
     (data_file, group_by, delim) = parseCommandLine()
     reader = loadFile(data_file, delim)
     categories, values = getCategoriesValues(reader)
+    
     print categories
     print values[0]
+    print group_by
+#    for value in values:
+        
 
 def parseCommandLine():
     """
@@ -21,7 +25,7 @@ def parseCommandLine():
     parser.add_argument('--delimiter', help='Description for what delimiter separates the fields', required=True)
 
     args = vars(parser.parse_args())
-    return (args['data_file'], args['group_by'], args['delimiter'])
+    return (args['data_file'], args['group_by'].split(','), args['delimiter'])
 
 def loadFile(data_file, delim):
     """
