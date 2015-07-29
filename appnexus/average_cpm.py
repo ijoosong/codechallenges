@@ -8,12 +8,20 @@ def aggregate():
     (data_file, group_by, delim) = parseCommandLine()
     reader = loadFile(data_file, delim)
     categories, values = getCategoriesValues(reader)
-    
+    locations = [categories.index(category) for category in group_by] 
+    group_by.append('average CPM/impression')
+
     print categories
     print values[0]
     print group_by
-#    for value in values:
-        
+    cpm = []
+    print locations
+    for row in values:
+        for location in locations:
+            if cpm.__contains__(row[location]):
+                break
+            else:
+                cpm.append
 
 def parseCommandLine():
     """
