@@ -5,32 +5,68 @@ def aggregate():
     """
     Main function that calls other functions to output aggregate
     """
-    (data_file, group_by, delim) = parseCommandLine()
+    #parse the command line and get the data file name, categories to group by, and the delimiter
+    data_file, group_by, delim = parseCommandLine()
+
+    #open the file and load the values
     reader = loadFile(data_file, delim)
     categories, values = getCategoriesValues(reader)
-    locations = [categories.index(category) for category in group_by] 
-    group_by.append('average CPM/impression')
 
-    print categories
-    print values[0]
-    print group_by
-    cpm = []
-    print locations
-    for row in values:
-        for location in locations:
-            if cpm.__contains__(row[location]):
-                break
+    #create a custom database of dictionaries
+    db = groupCategories(categories, values)
+
+    #find the totals of all of the database groups
+    totals = findTotalValues(db, group_by)
+
+    totals = findCpm(totals)
+
+    print totals['49_13378']
+
+def writeOut(data_out):
+    
+
+def findCpm(totals):
+    for group_id in totals:
+        if totals[group_id]['imps'] > 0:
+            totals[group_id]['cpm'] = totals[group_id]['cost']/totals[group_id]['imps']*1000
+        else:
+            totals[group_id]['cpm'] = totals[group_id]['cost']*1000
+    return totals
+
+def findTotalValues(db, group_by):
+    """
+    totals up the imps and cost for each group_by rows
+    """
+    totals = {}
+    for row in db:
+        buff = ''
+        for item in group_by:
+            if buff:
+                buff = "_".join([buff, row[item]])
             else:
-                cpm.append
+                buff = row[item]
+        if buff in totals:
+            totals[buff]['imps'] += float(row['imps'])
+            totals[buff]['cost'] += float(row['cost'])
+        else:
+            totals[buff] = {'imps': float(row['imps']), 'cost': float(row['cost'])}
+    return totals
+
+def groupCategories(categories, values):
+    """
+    Creates a list of dictionaries with categories
+    """
+    #for each row in values, for each category, return a list with dicts containing key,value
+    return [{categories[i]:row[i] for i in range(len(categories))} for row in values]
 
 def parseCommandLine():
     """
     Parses the command line arguments
     """
-    parser = argparse.ArgumentParser(description='Description of your program')
-    parser.add_argument('--data_file', help='Description for what file to open', required=True)
-    parser.add_argument('--group_by', help='Description for what fields to group by', required=True)
-    parser.add_argument('--delimiter', help='Description for what delimiter separates the fields', required=True)
+    parser = argparse.ArgumentParser(description='Script to open --data_file, return cpm by --group_by, delimited by --delimiter')
+    parser.add_argument('--data_file', help='What file to open', required=True)
+    parser.add_argument('--group_by', help='What fields to group by', required=True)
+    parser.add_argument('--delimiter', help='What delimiter separates the fields', required=True)
 
     args = vars(parser.parse_args())
     return (args['data_file'], args['group_by'].split(','), args['delimiter'])
