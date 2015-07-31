@@ -18,20 +18,25 @@ def aggregate():
     #find the totals of all of the database groups
     totals = findTotalValues(db, group_by)
 
-    totals = findCpm(totals)
+    totals, new_categories = findCpm(totals)
+    writeOut(totals, new_categories)
+    reader.close()
+    print totals['716_13368']
 
-    print totals['49_13378']
-
-def writeOut(data_out):
-    
+def writeOut(data_out_totals, data_out_categories):
+    return 0
 
 def findCpm(totals):
+    """
+    Calculates the CPM and returns it as cpm.
+    """
     for group_id in totals:
         if totals[group_id]['imps'] > 0:
             totals[group_id]['cpm'] = totals[group_id]['cost']/totals[group_id]['imps']*1000
         else:
             totals[group_id]['cpm'] = totals[group_id]['cost']*1000
-    return totals
+    new_categories = ['buyer_member_id', 'advertiser_id', 'average CPM/impression']
+    return totals, new_categories
 
 def findTotalValues(db, group_by):
     """
