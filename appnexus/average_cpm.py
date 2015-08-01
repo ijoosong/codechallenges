@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-import argparse, csv
+import argparse, csv, operator
 
 def aggregate():
     """
@@ -18,31 +18,36 @@ def aggregate():
     #find the totals of all of the database groups
     totals = findTotalValues(db, group_by)
 
-    totals, new_categories = findCpm(totals)
-    writeOut(totals, new_categories, delim)
+    id_cpm, new_categories = findCpm(totals)
+    writeOut(id_cpm, new_categories, delim)
 
-    print totals['716_13368']
 
 def writeOut(data_out_totals, data_out_categories, delim):
+    """
+    writes out data
+    """
     with open('_'.join(data_out_categories[0:2]) + '.csv', 'wb') as csvfile:
+        sorted_x = sorted(data_out_totals.items(), key=operator.itemgetter(1))
+
         data_writer = csv.writer(csvfile, delimiter=delim)
         data_writer.writerow(data_out_categories)
-        for row in data_out_totals:
-            buyer_advertiser = row.split('_')
-            data_writer.writerow([buyer_advertiser[0], buyer_advertiser[1], data_out_totals[row]['cpm']])
-        
+        for row in sorted_x:
+            buyer_advertiser = row[0].split('_')
+            data_writer.writerow([buyer_advertiser[0], buyer_advertiser[1], row[1]])
+
 
 def findCpm(totals):
     """
     Calculates the CPM and returns it as cpm.
     """
+    id_cpm = {}
     for group_id in totals:
         if totals[group_id]['imps'] > 0:
-            totals[group_id]['cpm'] = totals[group_id]['cost']/totals[group_id]['imps']*1000
+            id_cpm[group_id] = totals[group_id]['cost']/totals[group_id]['imps']*1000
         else:
-            totals[group_id]['cpm'] = totals[group_id]['cost']*1000
+            id_cpm[group_id] = totals[group_id]['cost']*1000
     new_categories = ['buyer_member_id', 'advertiser_id', 'average CPM/impression']
-    return totals, new_categories
+    return id_cpm, new_categories
 
 def findTotalValues(db, group_by):
     """
