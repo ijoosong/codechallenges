@@ -19,12 +19,18 @@ def aggregate():
     totals = findTotalValues(db, group_by)
 
     totals, new_categories = findCpm(totals)
-    writeOut(totals, new_categories)
-    reader.close()
+    writeOut(totals, new_categories, delim)
+
     print totals['716_13368']
 
-def writeOut(data_out_totals, data_out_categories):
-    return 0
+def writeOut(data_out_totals, data_out_categories, delim):
+    with open('_'.join(data_out_categories[0:2]) + '.csv', 'wb') as csvfile:
+        data_writer = csv.writer(csvfile, delimiter=delim)
+        data_writer.writerow(data_out_categories)
+        for row in data_out_totals:
+            buyer_advertiser = row.split('_')
+            data_writer.writerow([buyer_advertiser[0], buyer_advertiser[1], data_out_totals[row]['cpm']])
+        
 
 def findCpm(totals):
     """
