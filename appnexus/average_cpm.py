@@ -1,6 +1,12 @@
 #!/usr/local/bin/python
 import argparse, csv, operator
 
+#I didn't do the extra credit even though I can easily change a couple things
+#here to do so because I figured I just want your input on how I can write
+#better code.  As for using panda and numpy, i've done it before so it's
+#a matter of simple plug and chug from the internet but this is how I would
+#go about writing code for a company setting so let me know what you think
+#and I will more than gladly listen to any pointers you have.  Thank you so much!
 def aggregate():
     """
     Main function that calls other functions to output aggregate
