@@ -19,7 +19,12 @@ class DictTestCase(unittest.TestCase):
         tup = ('d')
         self.assertEqual(incr_dict(dct, tup), {'a':{'b':{'c':1}}, 'd':1})
 
-    def test_multiple_element_tuple_with_prexisting_dict(self):
-        
+    def test_multiple_element_tuple_that_completely_overlaps_with_prexisting_dict(self):
+        '''should return {'a':{'b':{'c':2}}}'''
+        dct = {'a':{'b':{'c':1}}}
+        tup = ('a', 'b', 'c')
+        self.assertEqual(incr_dict(dct, tup), {'a':{'b':{'c':2}}})
+
+                         
 if __name__ == '__main__':
     unittest.main()
