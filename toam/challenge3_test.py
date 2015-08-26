@@ -10,3 +10,6 @@ class DictTestCase(unittest.TestCase):
     def test_multiple_element_tuple_with_empty_dict(self):
         '''should return {'a':{'b'{'c':1}}}'''
         self.assertEqual(incr_dict({}, ('a', 'b', 'c')), {'a':{'b':{'c':1}}})
+
+if __name__ == '__main__':
+    unittest.main()
