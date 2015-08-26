@@ -1,6 +1,12 @@
 #!/usr/local/bin/python
-import argparse, csv
+import argparse, csv, operator
 
+#I didn't do the extra credit even though I can easily change a couple things
+#here to do so because I figured I just want your input on how I can write
+#better code.  As for using panda and numpy, i've done it before so it's
+#a matter of simple plug and chug from the internet but this is how I would
+#go about writing code for a company setting so let me know what you think
+#and I will more than gladly listen to any pointers you have.  Thank you so much!
 def aggregate():
     """
     Main function that calls other functions to output aggregate
@@ -18,25 +24,36 @@ def aggregate():
     #find the totals of all of the database groups
     totals = findTotalValues(db, group_by)
 
-    totals, new_categories = findCpm(totals)
-    writeOut(totals, new_categories)
-    reader.close()
-    print totals['716_13368']
+    id_cpm, new_categories = findCpm(totals)
+    writeOut(id_cpm, new_categories, delim)
 
-def writeOut(data_out_totals, data_out_categories):
-    return 0
+
+def writeOut(data_out_totals, data_out_categories, delim):
+    """
+    writes out data
+    """
+    with open('_'.join(data_out_categories[0:2]) + '.csv', 'wb') as csvfile:
+        sorted_x = sorted(data_out_totals.items(), key=operator.itemgetter(1))
+
+        data_writer = csv.writer(csvfile, delimiter=delim)
+        data_writer.writerow(data_out_categories)
+        for row in sorted_x:
+            buyer_advertiser = row[0].split('_')
+            data_writer.writerow([buyer_advertiser[0], buyer_advertiser[1], row[1]])
+
 
 def findCpm(totals):
     """
     Calculates the CPM and returns it as cpm.
     """
+    id_cpm = {}
     for group_id in totals:
         if totals[group_id]['imps'] > 0:
-            totals[group_id]['cpm'] = totals[group_id]['cost']/totals[group_id]['imps']*1000
+            id_cpm[group_id] = totals[group_id]['cost']/totals[group_id]['imps']*1000
         else:
-            totals[group_id]['cpm'] = totals[group_id]['cost']*1000
+            id_cpm[group_id] = totals[group_id]['cost']*1000
     new_categories = ['buyer_member_id', 'advertiser_id', 'average CPM/impression']
-    return totals, new_categories
+    return id_cpm, new_categories
 
 def findTotalValues(db, group_by):
     """
