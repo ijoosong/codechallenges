@@ -11,12 +11,12 @@ def incr_dict(dct, tup):
             dct[tup[0]] = 1
             return dct
     elif len(tup) > 1:
-        new_tup = (tup[x] for x in range(1, len(tup)))
+        new_tup = tuple(tup[x] for x in range(1, len(tup)))
         if tup[0] in dct:
             return incr_dict(dct[tup[0]], new_tup)
         else:
             dct[tup[0]] = {}
-            return incr_dict(dct[tup[0], new_tup])
+            return incr_dict(dct[tup[0]], new_tup)
 
 '''
     for x in range(len(tup)):
