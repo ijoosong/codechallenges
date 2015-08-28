@@ -3,7 +3,10 @@ def incr_dict(dct, tup):
     current_dct = dct
     for ele in tup:
         if ele == tup[-1]:
-            increment(current_dct, ele)
+            try:
+                increment(current_dct, ele)
+            except TypeError:
+                print ("This key at the end of your tuple already exists as a connecting node.")
         elif ele not in current_dct:
             current_dct[ele] = {}
         current_dct = current_dct[ele]
@@ -15,4 +18,3 @@ def increment(current_dct, ele):
         current_dct[ele] = 1
     else:
         current_dct[ele] += 1
-

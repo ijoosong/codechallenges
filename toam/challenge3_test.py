@@ -48,5 +48,10 @@ class DictTestCase(unittest.TestCase):
         dct = {}
         tup = (1, 2, 3)
         self.assertEqual(incr_dict(dct, tup), {1:{2:{3:1}}})
+
+    def test_dictionary_with_tuples_that_stop_at_middle_node(self):
+        dct = {'a': {'b': {'c':1}}}
+        tup = ('a', 'b')
+        self.assertRaises(Exception, incr_dict(dct, tup))
 if __name__ == '__main__':
     unittest.main()
