@@ -1,3 +1,8 @@
+'''
+This will continue to work well as it is O(n * k) where k is the number of keys it has to iterate over.  The tuple being long will not affect this as much as having a lot of keys will.
+The tests are found in challenge3_test.py.
+'''
+
 def incr_dict(dct, tup):
     '''given a dct and a tup, iterates through tuple to increment the last element of the tuple in a nested dictionary.  calls each element a node until last leaf'''
     current_dct = dct
