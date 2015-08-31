@@ -9,7 +9,10 @@ def incr_dict(dct, tup):
                 print ("This key at the end of your tuple already exists as a connecting node.")
         elif ele not in current_dct:
             current_dct[ele] = {}
-        current_dct = current_dct[ele]
+        try:
+            current_dct = current_dct[ele]
+        except TypeError:
+            print("You cannot grow this key with another key because its been incremented.")
     return dct
 
 def increment(current_dct, ele):

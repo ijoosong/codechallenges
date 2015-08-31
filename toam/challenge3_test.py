@@ -32,8 +32,7 @@ class DictTestCase(unittest.TestCase):
         self.assertEqual(incr_dict(dct, tup), {'a':{'b':{'c':1, 'd':1}}})
 
     def test_multiple_element_tuple_that_has_no_overlaps_with_prexisting_dict(self):
-        '''should return {'a':{'b':{'c':1}}, 'x':{'y':{'z':1
-        }}}'''
+        '''should return {'a':{'b':{'c':1}}, 'x':{'y':{'z':1}}}'''
         dct = {'a':{'b':{'c':1}}}
         tup = ('x','y','z')
         self.assertEqual(incr_dict(dct, tup), {'a':{'b':{'c':1}},'x':{'y':{'z':1}}})
@@ -45,13 +44,22 @@ class DictTestCase(unittest.TestCase):
         self.assertEqual(incr_dict(dct, tup), {'a':{'b':{'c':1}}, 'd':1})
 
     def test_tuples_that_arent_strings(self):
+        '''should return {1:{2:{3:1}}}'''
         dct = {}
         tup = (1, 2, 3)
         self.assertEqual(incr_dict(dct, tup), {1:{2:{3:1}}})
 
     def test_dictionary_with_tuples_that_stop_at_middle_node(self):
+        '''should raise error'''
         dct = {'a': {'b': {'c':1}}}
         tup = ('a', 'b')
         self.assertRaises(Exception, incr_dict(dct, tup))
+        
+    def test_dictionary_with_tuples_that_extend_end_node(self):
+        '''should raise error'''
+        dct = {'a': {'b': {'c':1}}}
+        tup = ('a', 'b', 'c', 'd')
+        self.assertRaises(Exception, incr_dict(dct, tup))
+        
 if __name__ == '__main__':
     unittest.main()
