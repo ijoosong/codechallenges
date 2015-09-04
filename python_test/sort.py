@@ -1,9 +1,48 @@
+#!/usr/bin/python
+import sys, getopt
 
-def sort_str_and_num(array):
+# Store input and output file names
+ifile=''
+ofile=''
+
+# Read command line args
+myopts, args = getopt.getopt(sys.argv[1:], "i:o:")
+
+##########################
+# o == option
+# a = argument passed to o
+##########################
+for o, a in myopts:
+    if o == '-i':
+        ifile = a
+    elif o == '-o':
+        ofile = a
+    else:
+        print("Usage: %s -i input -o output" % sys.argv[0])
+
+def sort_str_and_num():
     """sorted list of words and ints"""
     """assuming no special char"""
-    str_pos = [i for i in range(len(array)) if isinstance(array[i], str)]
-    print str_pos
-    return sorted(array)
+    with open(ifile) as f, open(ofile, 'w') as f_w:
+        array = f.read().split(' ')
+        str_pos = [i for i in range(len(array)) if isinstance(array[i], str)]
+        length = len(array)
+        array.sort()
+        li = []
+        sorted_array = []
+        y = 0
 
-print sort_str_and_num(['hello', 1, 4, 'bye', 3, 5, 'what'])
+        while(isinstance(array[-1], str)):
+            li.append(array.pop())
+
+            for x in range(length):
+                if x in str_pos:
+                    sorted_array.append(li.pop())
+                else:
+                    sorted_array.append(array[y])
+                    y += 1
+
+    return sorted_array
+
+if __name__ == '__main__':
+    sort_str_and_num()
