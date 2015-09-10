@@ -21,10 +21,14 @@ for o, a in myopts:
         print("Usage: %s -i input -o output" % sys.argv[0])
 
 def sort_str_and_num():
-    """sorted list of words and ints"""
-    """assuming no special char"""
+    """
+    sorted list of words and ints
+    assuming no special char
+    """
     with open(ifile) as f, open(ofile, 'w') as f_w:
-        array = f.read().split(' ')
+        open_file = f.read().strip()
+        array = [int(x) if x.isdigit() else x for x in open_file.split(' ')]
+        print array
         str_pos = [i for i in range(len(array)) if isinstance(array[i], str)]
         length = len(array)
         array.sort()
@@ -34,7 +38,6 @@ def sort_str_and_num():
 
         while(isinstance(array[-1], str)):
             li.append(array.pop())
-
             for x in range(length):
                 if x in str_pos:
                     sorted_array.append(li.pop())
@@ -42,6 +45,8 @@ def sort_str_and_num():
                     sorted_array.append(array[y])
                     y += 1
 
+    #        f_w.write(sorted_array)
+    print sorted_array
     return sorted_array
 
 if __name__ == '__main__':

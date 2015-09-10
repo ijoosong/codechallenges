@@ -2,6 +2,7 @@ import urllib2
 
 def parse_data():
     url = "https://raw.githubusercontent.com/alexwaters/domainChecker/master/archive/domainDict"
+    data = urllib2.urlopen(url)
     str = data.read().strip()
     li = [str[i:i+3] for i in xrange(0, len(str),3)]
     for i in range(len(li)):
